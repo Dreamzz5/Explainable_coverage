@@ -3,7 +3,7 @@ Discovering Key Sub-trajectories To Explain The Traffic Prediction
 
 
 <p align="center">
-  <img src="figure/framework.png" width="400"/>
+  <img src="figure/Frameworks.png" width="400"/>
 </p>
 
 
