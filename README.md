@@ -2,10 +2,11 @@
 Discovering Key Sub-trajectories To Explain The Traffic Prediction
 
 
+<p align="center">
+  <img src="figure/framework.png" width="400"/>
+</p>
 
-<center class="half">
-    <img src="figure/framework.png" width="400"/>
-</center>
+
 ## Abstract 
 Flow prediction has attracted extensive research efforts; however,
 achieving both reliable efficiency and interpretability from a unified model remains a challenging problem. Among the literature,
@@ -79,11 +80,10 @@ We have presented a summarization example in Summarization.ipynb
 ### Result
  The results of spatial visualization in Chengdu are displayed. We  use transparency to represent the Shapley value and show the trajectories. direction to reflect the trend of traffic flow. We can see that most of the people live in the suburbs in the morning, so the traffic flow mainly comes from North Star Road, and then passes through the Second Ring Road, which is successfully perceived by the neural network. Therefore, the distribution with the largest Shapley weight is the part with blue sub-trajectories. On the contrary, after the evening rush hour, people begin to rush from the city to the suburbs during the rush hour. The second loop traffic is successfully mined by the model. We only show the first two classes, because the Shapley value in the later classes is too small to be ignored. 
 
-<center class="half">
-    <img src="figure/evening_mining.png" width="330"/><img src="figure/daytime_mining.png" width="330"/>
-</center>
 
-
+<p align="center">
+ <img src="figure/evening_mining.png" width="400"/><img src="figure/daytime_mining.png" width="400"/>
+</p>
 
 
 
