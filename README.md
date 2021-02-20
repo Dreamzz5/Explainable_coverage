@@ -1,20 +1,45 @@
 # KDD21
-Discovering Key Sub-trajectories To Explain the Traffic Prediction
-
-![Overall_framework]()
+Discovering Key Sub-trajectories To Explain The Traffic Prediction
 
 
-Graph Convolutional Networks (GCNs) are state-of-the-art graph based representation learning models by iteratively stacking multiple layers of convolution aggregation operations and non-linear activation operations. Recently, in Collaborative Filtering (CF) domain, by treating the user-item interaction behavior as a bipartite graph, some researchers model the higher-layer collaborative signals with GCNs to alleviate the data sparsity issue in CF, and show superior performance compared to traditional works. However, these GCN based recommendation models suffer from the complexity and training difficulty with non-linear activations for large user-item graphs, and usually could not model deep layers of graph convolutions due to the over smoothing problem in the iterative process. In this paper, we revisit these graph based collaborative filtering models from two aspects. First, we empirically show that removing non-linearities would enhance recommendation performance, which is consistent with the theories in simple graph convolutional networks. Second, we propose a residual network structure that is specifically designed for CF with user-item interaction modeling, which alleviates the over smoothing problem in graph convolution aggregation operation with sparse data. The proposed model is a linear model and it is easy to train, scales to large datasets, and yields better efficiency and effectiveness on two real datasets.
 
-We provide PyTorch implementations for LR-GCCF model.
+<center class="half">
+    <img src="figure/framework.png" width="400"/>
+</center>
+## Abstract 
+Flow prediction has attracted extensive research efforts; however,
+achieving both reliable efficiency and interpretability from a unified model remains a challenging problem. Among the literature,
+Shapely offers interpretable and explanatory insights as a unified
+framework for interpreting predictions. But, using Shapley directly
+in traffic prediction will cause some issues. On one hand, the positive and negative regions correlation of fine-grained interpretation
+area is difficult to understand. On the other hand, Shapley method
+is an NP-hard problem, which will be accompanied by numerous
+possibilities in grid-based interpretation. To this end, in this paper,
+we propose Trajectory Shapley, an approximate Shapley approach
+by decomposing flow tensor input with a multitude of trajectories
+and outputting the trajectories Shapely values at a specific region.
+Moreover, the appearance of trajectory is often full of randomness,
+which will lead to interpreting result instability. Therefore, we propose the feature-based submodular algorithm to summarize the
+representative Shapley pattern. The summarization method can
+quickly generate the summary of Shapley distribution on overall
+trajectories so that users can quickly understand the mechanism
+of the deep model. Experimental results show that our algorithm
+can find multiple traffic trends from the different arterial roads and
+their Shapely distributions. Our approach is tested on real-world
+taxi trajectory datasets and exceeds explainable baseline models.
 
-**Note**: The current software works well with PyTorch 1.1.0
+We provide PyTorch implementations for each baseline model.
+
+**Note**: The current software works well with PyTorch 1.7.0
 
 ## Prerequisites
 
 - PyTorch
-- Python 3.5
+- Python 3.7
 - CPU or NVIDIA GPU + CUDA CuDNN
+- shap
+- matplotlib
+- apricot-select
 
 ## Getting Started
 
@@ -23,112 +48,41 @@ We provide PyTorch implementations for LR-GCCF model.
 - Clone this repo:
 
 ```bash
-git clone https://github.com/newlei/LR-GCCF.git
-cd LR-GCCF
-cd code
+git https://github.com/Hongjun-Wang/Explainable_coverage.git
+cd Explainable_coverage
 ```
 
 ### Dataset
 
 - Our datasets: 
-  > Under the data folder ('cd ./data')
+  > Chengdu and Xi'an DiDi
   >
-  > Any problem: please seed mail to me <chenlei.hfut@gmail.com>.
   >
-- Make self datasets: 
-  > Favor <user,item> matrix,  e.g.:<1,2> denotes that user(id:1) favors item(id:2) 
-  >  
+
 
 ### Train/test
 
 - Train a model:
 
 ```python
-#!./LR-GCCF/code
-cd LR-GCCF
-cd code
-#for amazon dataset
-python train_amazon.py
-#for gowalla dataset
-python train_gowalla.py
-```
-
-- Test a model:
-
-```python
-#!./LR-GCCF/code
-cd LR-GCCF
-cd code
-#for amazon dataset
-python test_amazon.py
-#for gowalla dataset
-python test_gowalla.py
+cd Explainable_coverage
+zip data.7z
+#for Chengdu dataset
+python train_cnn.py
 ```
 
 
-### Note: the results of NGCF in our paper
-*Why is there a big gap between the NGCF results in the paper and the original NGCF?* Since many researcher have consulted this issue, we explain here.
-
-In short, the calculated NDCG in the original NGCF is not consistent with the original NDCG. We have fixed it and show the correct results. So there a big gap in the results of NGCF.
-
-NDCG=DCG/IDCG. The maximum possible DCG is called Ideal DCG (IDCG), in other words, IDCG is the DCG value of the best ranking function on a dataset. so for a specific user in test data, the best ranking is unique, then the IDCG is unchanging. However, in NGCF [code](https://github.com/xiangwang1223/neural_graph_collaborative_filtering), the IDCG is changing. The calculation of the dcg_max(IDCG) depends on parameters r, but r is not the best ranking and will change according to the predicted of the model. Thus, the results of NGCF are based on a wrong implementation of NDCG.
-
-You also can refer to the [link](https://github.com/xiangwang1223/neural_graph_collaborative_filtering/issues/34) and [link](https://github.com/kuandeng/LightGCN/issues/1) is the follow-up work of NGCF authors, this link also explains problem of NDCG.
+### Example
+We have presented a summarization example in Summarization.ipynb
 
 
+### Result
+ The results of spatial visualization in Chengdu are displayed. We  use transparency to represent the Shapley value and show the trajectories. direction to reflect the trend of traffic flow. We can see that most of the people live in the suburbs in the morning, so the traffic flow mainly comes from North Star Road, and then passes through the Second Ring Road, which is successfully perceived by the neural network. Therefore, the distribution with the largest Shapley weight is the part with blue sub-trajectories. On the contrary, after the evening rush hour, people begin to rush from the city to the suburbs during the rush hour. The second loop traffic is successfully mined by the model. We only show the first two classes, because the Shapley value in the later classes is too small to be ignored. 
 
-## Citation 
-If you find this useful for your research, please kindly cite the following two papers
-that crawal and analyze the data.
+<center class="half">
+    <img src="figure/evening_mining.png" width="330"/><img src="figure/daytime_mining.png" width="330"/>
+</center>
 
-```
-@article{LRGCCF2019,
-  title={Revisiting Graph based Collaborative Filtering: A Linear Residual Graph Convolutional Network Approach},
-  author={Lei, Chen and Le, Wu and  Richang, Hong and Kun, Zhang and Meng, Wang}
-  journal={AAAI},
-  year={2019}
-}
-
-```
-
-Besides, you may find these following works are useful for understanding social recommendation.
-```
-@article{evolveSNS2017,
-  title={Modeling the evolution of users’ preferences and social links in social networking services},
-  author={Wu, Le and Ge, Yong and Liu, Qi and Chen, Enhong and Hong, Richang and Du, Junping and Wang, Meng},
-  journal={IEEE Transactions on Knowledge and Data Engineering},
-  volume={29},
-  number={6}, 
-  pages={1240--1253},
-  year={2017},
-  publisher={IEEE}
-}
-
-
-@inproceedings{arse2018,
-  title={Attentive recurrent social recommendation},
-  author={Sun, Peijie and Wu, Le and Wang, Meng},
-  booktitle={The 41st International ACM SIGIR Conference on Research \& Development in Information Retrieval},
-  pages={185--194},
-  year={2018},
-  organization={ACM}
-}
-
-
-
-@inproceedings{DiffNet2019,
-  title={A Neural Influence Diffusion Model for Social Recommendation},
-  author={Wu, Le and Sun, Peijie and  Fu, Yanjie and Hong, Richang and Wang, Xiting and Wang, Meng},
-  booktitle={The 42st International ACM SIGIR Conference on Research \& Development in Information Retrieval},
-  year={2019},
-  organization={ACM}
-}
-```
-
-
-
-## Acknowledgments
-We thank LMC lab..
 
 
 
